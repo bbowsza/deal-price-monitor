@@ -1,0 +1,33 @@
+[
+  {
+    "name": "BedJet 3 Climate Comfort System",
+    "search_query": "BedJet 3 Climate Comfort System",
+    "target_price": 300,
+    "required_terms": [
+      "bedjet",
+      "3"
+    ],
+    "excluded_terms": [
+      "cloud sheet",
+      "sheet",
+      "cover",
+      "replacement",
+      "accessory"
+    ]
+  },
+
+  {
+    "name": "Ninja Slushi Twist",
+    "search_query": "Ninja Slushi Twist",
+    "target_price": 250,
+    "required_terms": [
+      "ninja",
+      "slushi"
+    ],
+    "excluded_terms": [
+      "replacement",
+      "parts",
+      "accessory"
+    ]
+  }
+]
