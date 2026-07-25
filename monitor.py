@@ -188,7 +188,7 @@ for product in PRODUCTS:
 
         if source["type"]=="shopify":
 
-           result=shopify_price(
+     result=shopify_price(
     url,
     product
 )
