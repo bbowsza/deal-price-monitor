@@ -19,7 +19,7 @@ def get_page(url):
         response = requests.get(
             url,
             headers=HEADERS,
-            timeout=30
+            timeout=60
         )
 
         if response.status_code != 200:
@@ -164,7 +164,7 @@ def shopify_price(url, product):
         response=requests.get(
             url,
             headers=HEADERS,
-            timeout=30
+            timeout=60
         )
 
 
