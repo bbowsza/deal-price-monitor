@@ -153,40 +153,33 @@ print(
 
 for product in PRODUCTS:
 
-
     print(
         "\nChecking",
         product["name"]
     )
 
-
-
-    best=None
-
+    best = None
 
 
     for source in SOURCES:
 
-
         print(
+            "Checking source:",
             source["name"]
         )
 
 
-        url=source["url"].format(
-
+        url = source["url"].format(
             query=
             product["search_query"]
             .replace(
                 " ",
                 "+"
             )
-
         )
 
 
-
-                if source["type"] == "shopify":
+        if source["type"] == "shopify":
 
             result = shopify_price(
                 url
@@ -200,59 +193,50 @@ for product in PRODUCTS:
             )
 
 
-
         if result:
 
+            result["store"] = source["name"]
 
-            result["store"]=source["name"]
 
+            print(
+                "Found:",
+                result
+            )
 
 
             if (
                 best is None
-                or result["price"]
-                <
-                best["price"]
+                or result["price"] < best["price"]
             ):
 
-                best=result
-
+                best = result
 
 
 
     if best:
 
-
         print(
-            "Best:",
+            "Best deal:",
             best
         )
 
 
-
-        alert_key=(
-
+        alert_key = (
             product["name"]
             +
             str(best["price"])
-
         )
 
 
-
         if (
-
             best["price"]
             <=
             product["target_price"]
 
             and
 
-            alert_key
-            not in state
-
+            alert_key not in state
         ):
-
 
             send_email(
                 product,
@@ -260,12 +244,7 @@ for product in PRODUCTS:
             )
 
 
-            state[alert_key]=True
-
-
-
-
-
+            state[alert_key] = True
 save_state(
     state
 )
