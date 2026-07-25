@@ -186,17 +186,15 @@ for product in PRODUCTS:
 
 
 
-        if source["type"]=="shopify":
+                if source["type"] == "shopify":
 
-     result=shopify_price(
-    url,
-    product
-)
-
+            result = shopify_price(
+                url
+            )
 
         else:
 
-            result=search_page(
+            result = search_page(
                 url,
                 product
             )
