@@ -120,30 +120,34 @@ for product in PRODUCTS:
 
 
 
-    for source in SOURCES:
+        for source in SOURCES:
 
         print(
-            "Source:",
+            "Checking source:",
             source["name"]
         )
 
 
         url = source["url"].format(
-            query=product["search_query"].replace(
+
+            query=
+            product["search_query"]
+            .replace(
                 " ",
                 "+"
             )
+
         )
 
 
-       if source["type"] == "shopify":
+        if source["type"] == "shopify":
 
-    result = shopify_price(
-        url,
-        product
-    )
+            result = shopify_price(
+                url,
+                product
+            )
 
-else:
+        else:
 
             result = search_page(
                 url,
@@ -151,16 +155,9 @@ else:
             )
 
 
-
         if result:
 
             result["store"] = source["name"]
-
-
-            print(
-                "Found:",
-                result
-            )
 
 
             if (
@@ -169,9 +166,6 @@ else:
             ):
 
                 best = result
-
-
-
     if best:
 
         print(
