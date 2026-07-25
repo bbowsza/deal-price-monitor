@@ -164,11 +164,66 @@ def shopify_price(url, product):
         response=requests.get(
             url,
             headers=HEADERS,
-            timeout=60
+            timeout=30
         )
 
 
         data=response.json()
+
+
+        title = data.get(
+            "title",
+            ""
+        ).lower()
+
+
+        if not check_terms(
+            title,
+            product
+        ):
+            return None
+
+
+
+        prices=[]
+
+
+        for variant in data.get(
+            "variants",
+            []
+        ):
+
+            if variant.get("price"):
+
+                prices.append(
+                    float(
+                        variant["price"]
+                    )
+                    /
+                    100
+                )
+
+
+        if prices:
+
+            return {
+
+                "price":min(prices),
+
+                "url":url
+
+            }
+
+
+    except Exception as e:
+
+        print(
+            "Shopify error:",
+            e
+        )
+
+
+    return None
 
 
         title = data.get(
