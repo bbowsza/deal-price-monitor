@@ -161,14 +161,14 @@ def shopify_price(url, product):
 
     try:
 
-        response=requests.get(
+        response = requests.get(
             url,
             headers=HEADERS,
             timeout=30
         )
 
 
-        data=response.json()
+        data = response.json()
 
 
         title = data.get(
@@ -181,11 +181,12 @@ def shopify_price(url, product):
             title,
             product
         ):
+
             return None
 
 
 
-        prices=[]
+        prices = []
 
 
         for variant in data.get(
@@ -204,13 +205,14 @@ def shopify_price(url, product):
                 )
 
 
+
         if prices:
 
             return {
 
-                "price":min(prices),
+                "price": min(prices),
 
-                "url":url
+                "url": url
 
             }
 
@@ -224,101 +226,6 @@ def shopify_price(url, product):
 
 
     return None
-
-
-        title = data.get(
-            "title",
-            ""
-        ).lower()
-
-
-        if not check_terms(
-            title,
-            product
-        ):
-            return None
-
-
-
-        prices=[]
-
-
-        for variant in data.get(
-            "variants",
-            []
-        ):
-
-            if variant.get("price"):
-
-                prices.append(
-                    float(
-                        variant["price"]
-                    )
-                    /
-                    100
-                )
-
-
-        if prices:
-
-            return {
-
-                "price":min(prices),
-
-                "url":url
-
-            }
-
-
-    except Exception as e:
-
-        print(
-            "Shopify error:",
-            e
-        )
-
-
-    return None
-        ):
-
-
-            if variant.get("price"):
-
-                prices.append(
-                    float(
-                        variant["price"]
-                    )
-                    /
-                    100
-                )
-
-
-
-        if prices:
-
-            return {
-
-                "price":min(prices),
-
-                "url":url
-
-            }
-
-
-    except Exception as e:
-
-        print(
-            "Shopify error:",
-            e
-        )
-
-
-    return None
-
-
-
-
-
 def search_page(url, product):
 
 
