@@ -32,9 +32,8 @@ jobs:
 
 
       - name: Run price monitor
-        env:
-          EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
-          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
-          EMAIL_TO: ${{ secrets.EMAIL_TO }}
-        run: |
-          python monitor.py
+       env:
+  EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+  EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+  EMAIL_TO: ${{ secrets.EMAIL_TO }}
+  SMS_EMAIL: ${{ secrets.SMS_EMAIL }}
