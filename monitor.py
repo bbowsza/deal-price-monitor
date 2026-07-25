@@ -6,17 +6,30 @@ from datetime import datetime, timezone
 from email.message import EmailMessage
 
 from sources import SOURCES
-from scrapers import shopify_price, search_page
+
+from scrapers import (
+    shopify_price,
+    search_page
+)
 
 
 PRODUCT_FILE = "products.json"
 STATE_FILE = "state.json"
 
 
+
+# -----------------------------
+# Load products
+# -----------------------------
+
 with open(PRODUCT_FILE) as f:
     PRODUCTS = json.load(f)
 
 
+
+# -----------------------------
+# State management
+# -----------------------------
 
 def load_state():
 
@@ -33,7 +46,10 @@ def load_state():
 
 def save_state(data):
 
-    with open(STATE_FILE, "w") as f:
+    with open(
+        STATE_FILE,
+        "w"
+    ) as f:
 
         json.dump(
             data,
@@ -43,10 +59,16 @@ def save_state(data):
 
 
 
+# -----------------------------
+# Email alert
+# -----------------------------
+
 def send_email(product, deal):
 
     sender = os.environ["EMAIL_FROM"]
+
     password = os.environ["EMAIL_PASSWORD"]
+
     recipient = os.environ["EMAIL_TO"]
 
 
@@ -54,12 +76,14 @@ def send_email(product, deal):
 
 
     msg["Subject"] = (
-        f"🚨 {product['name']} ${deal['price']:.2f}"
+        f"🚨 Deal Alert: {product['name']} ${deal['price']:.2f}"
     )
 
 
     msg["From"] = sender
+
     msg["To"] = recipient
+
 
 
     msg.set_content(
@@ -72,17 +96,18 @@ Product:
 Price:
 ${deal['price']:.2f}
 
+Target Price:
+${product['target_price']:.2f}
+
 Store:
 {deal['store']}
 
-Link:
+Purchase Link:
 {deal['url']}
 
-Target:
-${product['target_price']}
-
-Time:
+Detected:
 {datetime.now(timezone.utc)}
+
 """
     )
 
@@ -97,21 +122,32 @@ Time:
             password
         )
 
-        smtp.send_message(msg)
+        smtp.send_message(
+            msg
+        )
 
+
+
+# -----------------------------
+# Main monitor
+# -----------------------------
+
+print(
+    "Starting monitor"
+)
 
 
 state = load_state()
 
 
-print("Starting monitor")
-
-
 
 for product in PRODUCTS:
 
+
+    print()
+
     print(
-        "\nChecking:",
+        "Checking:",
         product["name"]
     )
 
@@ -120,7 +156,8 @@ for product in PRODUCTS:
 
 
 
-        for source in SOURCES:
+    for source in SOURCES:
+
 
         print(
             "Checking source:",
@@ -140,14 +177,22 @@ for product in PRODUCTS:
         )
 
 
+
+        result = None
+
+
+
         if source["type"] == "shopify":
+
 
             result = shopify_price(
                 url,
                 product
             )
 
+
         else:
+
 
             result = search_page(
                 url,
@@ -155,36 +200,69 @@ for product in PRODUCTS:
             )
 
 
+
         if result:
+
 
             result["store"] = source["name"]
 
 
+
             if (
+
                 best is None
-                or result["price"] < best["price"]
+
+                or
+
+                result["price"] < best["price"]
+
             ):
 
                 best = result
+
+
+
+
     if best:
 
+
         print(
-            "Best deal:",
+            "Best:",
             best
         )
 
 
         alert_key = (
+
             product["name"]
+
             +
+
             str(best["price"])
+
         )
 
 
+
         if (
-            best["price"] <= product["target_price"]
-            and alert_key not in state
+
+            best["price"]
+
+            <=
+
+            product["target_price"]
+
+            and
+
+            alert_key not in state
+
         ):
+
+
+            print(
+                "Sending alert"
+            )
+
 
             send_email(
                 product,
@@ -196,7 +274,23 @@ for product in PRODUCTS:
 
 
 
-save_state(state)
+    else:
 
 
-print("Finished")
+        print(
+            "No deals found"
+        )
+
+
+
+save_state(
+    state
+)
+
+
+
+print()
+
+print(
+    "Finished"
+)
