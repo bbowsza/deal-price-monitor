@@ -65,11 +65,16 @@ def save_state(data):
 
 def send_email(product, deal):
 
-    sender = os.environ["EMAIL_FROM"]
+    recipients = [
+    os.environ["EMAIL_TO"],
+    os.environ["SMS_EMAIL"]
+]
 
-    password = os.environ["EMAIL_PASSWORD"]
-
-    recipient = os.environ["EMAIL_TO"]
+server.sendmail(
+    os.environ["EMAIL_FROM"],
+    recipients,
+    msg.as_string()
+)
 
 
     msg = EmailMessage()
