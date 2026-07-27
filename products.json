@@ -18,16 +18,18 @@
 
   {
   "name": "Ninja Slushi Twist",
-  "search_query": "Ninja frozen drink maker",
+  "search_query": "\"Ninja Slushi\"",
   "target_price": 750,
-    "required_terms": [
-      "ninja",
-      "slushi"
-    ],
-    "excluded_terms": [
-      "replacement",
-      "parts",
-      "accessory"
-    ]
-  }
+  "required_terms": [
+    "ninja",
+    "slushi",
+    "frozen"
+  ],
+  "excluded_terms": [
+    "replacement",
+    "parts",
+    "accessory",
+    "deal alerts"
+  ]
+}
 ]
