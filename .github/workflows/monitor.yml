@@ -1,40 +1,30 @@
 name: Deal Monitor
 
 on:
+  workflow_dispatch:
   schedule:
     - cron: "*/15 * * * *"
 
-  workflow_dispatch:
-  schedule:
-    - cron: '*/30 * * * *'
-
-
 jobs:
-
   monitor:
-
     runs-on: ubuntu-latest
-
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
-
 
       - name: Setup Python
         uses: actions/setup-python@v6
         with:
           python-version: "3.12"
 
-
       - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
-
+        run: pip install -r requirements.txt
 
       - name: Run price monitor
-       env:
-  EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
-  EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
-  EMAIL_TO: ${{ secrets.EMAIL_TO }}
-  SMS_EMAIL: ${{ secrets.SMS_EMAIL }}
+        env:
+          EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+          SMS_EMAIL: ${{ secrets.SMS_EMAIL }}
+        run: python monitor.py
