@@ -17,14 +17,12 @@ PRODUCT_FILE = "products.json"
 STATE_FILE = "state.json"
 
 
-
 # -----------------------------
 # Load products
 # -----------------------------
 
 with open(PRODUCT_FILE) as f:
     PRODUCTS = json.load(f)
-
 
 
 # -----------------------------
@@ -34,12 +32,10 @@ with open(PRODUCT_FILE) as f:
 def load_state():
 
     try:
-
         with open(STATE_FILE) as f:
             return json.load(f)
 
     except:
-
         return {}
 
 
@@ -58,23 +54,19 @@ def save_state(data):
         )
 
 
-
 # -----------------------------
-# Email alert
+# Email + SMS alert
 # -----------------------------
 
 def send_email(product, deal):
 
-    recipients = [
-    os.environ["EMAIL_TO"],
-    os.environ["SMS_EMAIL"]
-]
+    sender = os.environ["EMAIL_FROM"]
+    password = os.environ["EMAIL_PASSWORD"]
 
-server.sendmail(
-    os.environ["EMAIL_FROM"],
-    recipients,
-    msg.as_string()
-)
+    recipients = [
+        os.environ["EMAIL_TO"],
+        os.environ["SMS_EMAIL"]
+    ]
 
 
     msg = EmailMessage()
@@ -87,8 +79,7 @@ server.sendmail(
 
     msg["From"] = sender
 
-    msg["To"] = recipient
-
+    msg["To"] = ", ".join(recipients)
 
 
     msg.set_content(
@@ -128,9 +119,10 @@ Detected:
         )
 
         smtp.send_message(
-            msg
+            msg,
+            from_addr=sender,
+            to_addrs=recipients
         )
-
 
 
 # -----------------------------
@@ -145,9 +137,7 @@ print(
 state = load_state()
 
 
-
 for product in PRODUCTS:
-
 
     print()
 
@@ -158,7 +148,6 @@ for product in PRODUCTS:
 
 
     best = None
-
 
 
     for source in SOURCES:
@@ -182,13 +171,10 @@ for product in PRODUCTS:
         )
 
 
-
         result = None
 
 
-
         if source["type"] == "shopify":
-
 
             result = shopify_price(
                 url,
@@ -198,33 +184,24 @@ for product in PRODUCTS:
 
         else:
 
-
             result = search_page(
                 url,
                 product
             )
 
 
-
         if result:
-
 
             result["store"] = source["name"]
 
 
-
             if (
-
                 best is None
-
                 or
-
                 result["price"] < best["price"]
-
             ):
 
                 best = result
-
 
 
 
@@ -238,29 +215,20 @@ for product in PRODUCTS:
 
 
         alert_key = (
-
             product["name"]
-
             +
-
             str(best["price"])
-
         )
 
 
-
         if (
-
             best["price"]
-
             <=
-
             product["target_price"]
 
             and
 
             alert_key not in state
-
         ):
 
 
@@ -281,7 +249,6 @@ for product in PRODUCTS:
 
     else:
 
-
         print(
             "No deals found"
         )
@@ -291,7 +258,6 @@ for product in PRODUCTS:
 save_state(
     state
 )
-
 
 
 print()
